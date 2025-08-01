@@ -1,6 +1,7 @@
 import cv2
 import matplotlib.pyplot as plt
 import pyzbar.pyzbar as pyzbar
+import webbrowser
 
 # img = cv2.imread('../img/frame.png')
 # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -8,6 +9,7 @@ cap = cv2.VideoCapture(0)
 
 while (cap.isOpened()):
     ret, img = cap.read()
+    barcode_data = None
 
     if not ret:
         continue
@@ -23,10 +25,17 @@ while (cap.isOpened()):
 
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
         cv2.putText(img, text, (x, y - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 1, cv2.LINE_AA)
+    
     cv2.imshow('camera', img)
+    
     key = cv2.waitKey(1)
     if key == ord('q'):
         break
+    elif key == 32:
+        if barcode_data == None:
+            print("No scanned URL")
+            continue
+        else: webbrowser.open(barcode_data, 2)
 
 cap.release()
 cv2.destroyAllWindows()
